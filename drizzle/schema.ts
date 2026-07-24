@@ -25,4 +25,69 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Game levels table - defines all available game levels
+ */
+export const levels = mysqlTable("levels", {
+  id: int("id").autoincrement().primaryKey(),
+  levelNumber: int("levelNumber").notNull().unique(),
+  name: varchar("name", { length: 128 }).notNull(),
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard", "extreme"]).notNull(),
+  description: text("description"),
+  targetTime: int("targetTime").notNull(), // in seconds
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Level = typeof levels.$inferSelect;
+export type InsertLevel = typeof levels.$inferInsert;
+
+/**
+ * User progress table - tracks user's progress on each level
+ */
+export const userProgress = mysqlTable("userProgress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  levelId: int("levelId").notNull(),
+  isUnlocked: int("isUnlocked").default(0).notNull(), // 0 or 1 (boolean)
+  isCompleted: int("isCompleted").default(0).notNull(),
+  bestTime: int("bestTime"), // in milliseconds, null if not completed
+  stars: int("stars").default(0), // 0-3
+  attempts: int("attempts").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserProgress = typeof userProgress.$inferSelect;
+export type InsertUserProgress = typeof userProgress.$inferInsert;
+
+/**
+ * Leaderboard table - caches top scores for each level
+ */
+export const leaderboard = mysqlTable("leaderboard", {
+  id: int("id").autoincrement().primaryKey(),
+  levelId: int("levelId").notNull(),
+  userId: int("userId").notNull(),
+  bestTime: int("bestTime").notNull(), // in milliseconds
+  userName: varchar("userName", { length: 128 }).notNull(),
+  rank: int("rank"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Leaderboard = typeof leaderboard.$inferSelect;
+export type InsertLeaderboard = typeof leaderboard.$inferInsert;
+
+/**
+ * User statistics table - aggregated stats for each user
+ */
+export const userStats = mysqlTable("userStats", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  totalScore: int("totalScore").default(0).notNull(),
+  totalStars: int("totalStars").default(0).notNull(),
+  completedLevels: int("completedLevels").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserStats = typeof userStats.$inferSelect;
+export type InsertUserStats = typeof userStats.$inferInsert;
