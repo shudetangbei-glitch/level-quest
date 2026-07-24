@@ -25,6 +25,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
   onGameStateChange,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const [gameState, setGameState] = useState({
@@ -36,27 +37,22 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
 
   // Initialize game engine
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !containerRef.current) return;
 
     const canvas = canvasRef.current;
-    
-    // Responsive canvas sizing
-    const updateCanvasSize = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (rect) {
-        const width = Math.min(rect.width - 32, 800);
-        const height = (width / 4) * 3; // 4:3 aspect ratio
-        canvas.width = width;
-        canvas.height = height;
-      }
-    };
+    const container = containerRef.current;
 
-    updateCanvasSize();
-    window.addEventListener("resize", updateCanvasSize);
+    // Use fixed 800x600 canvas size for consistent gameplay
+    // The CSS will handle responsive scaling
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+
+    canvas.width = GAME_WIDTH;
+    canvas.height = GAME_HEIGHT;
 
     const config: GameConfig = {
-      canvasWidth: canvas.width,
-      canvasHeight: canvas.height,
+      canvasWidth: GAME_WIDTH,
+      canvasHeight: GAME_HEIGHT,
       gravity: 0.6,
       friction: 0.95,
     };
@@ -114,7 +110,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", updateCanvasSize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
         animationIdRef.current = null;
@@ -182,11 +177,25 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-full pb-32 md:pb-4">
-      <canvas
-        ref={canvasRef}
-        className="border-4 border-gray-800 rounded-lg shadow-lg bg-gray-100 w-full max-w-2xl"
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+      <div
+        ref={containerRef}
+        className="w-full max-w-2xl bg-gray-100 rounded-lg overflow-hidden shadow-lg"
+        style={{
+          aspectRatio: "4/3",
+          maxWidth: "100%",
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full block"
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </div>
+
       <div className="hidden md:flex gap-4">
         <button
           onClick={handlePause}
@@ -202,6 +211,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
           重新开始
         </button>
       </div>
+
       <MobileControls
         onMove={handleMobileMove}
         onJump={handleMobileJump}
