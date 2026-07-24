@@ -8,7 +8,7 @@ import { LevelData } from "./types";
 export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
   1: {
     levelNumber: 1,
-    name: "Getting Started",
+    name: "开始冒险",
     difficulty: "easy",
     targetTime: 30000,
     width: 800,
@@ -85,7 +85,7 @@ export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
 
   2: {
     levelNumber: 2,
-    name: "Moving Platforms",
+    name: "移动平台",
     difficulty: "easy",
     targetTime: 45000,
     width: 800,
@@ -174,7 +174,7 @@ export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
 
   3: {
     levelNumber: 3,
-    name: "Obstacle Course",
+    name: "障碍挑战",
     difficulty: "medium",
     targetTime: 60000,
     width: 800,
@@ -279,7 +279,7 @@ export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
 
   4: {
     levelNumber: 4,
-    name: "Complex Challenge",
+    name: "复杂迷宫",
     difficulty: "hard",
     targetTime: 90000,
     width: 800,
@@ -402,7 +402,7 @@ export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
 
   5: {
     levelNumber: 5,
-    name: "Extreme Difficulty",
+    name: "极限挑战",
     difficulty: "hard",
     targetTime: 120000,
     width: 800,
@@ -557,7 +557,7 @@ export const LEVEL_DEFINITIONS: Record<number, Omit<LevelData, "id">> = {
 
   6: {
     levelNumber: 6,
-    name: "The Final Boss",
+    name: "最终 Boss",
     difficulty: "extreme",
     targetTime: 150000,
     width: 800,
