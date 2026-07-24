@@ -98,11 +98,11 @@ export default function Game() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
-        <div className="mb-6 flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold text-white">
+        <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex-1">
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
               第 {levelNumber} 关：{levelDef.name}
             </h1>
             <p className="text-purple-300 mt-2">
@@ -122,7 +122,7 @@ export default function Game() {
         </div>
 
         {/* Game Canvas */}
-        <div className="mb-8 bg-slate-800 rounded-lg p-4 border-2 border-purple-500">
+        <div className="mb-8 bg-slate-800 rounded-lg p-2 md:p-4 border-2 border-purple-500 w-full">
           <GameCanvas
             levelNumber={levelNumber}
             onGameEnd={handleGameEnd}
@@ -131,7 +131,7 @@ export default function Game() {
         </div>
 
         {/* Info */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="hidden md:grid grid-cols-3 gap-4 mb-8">
           <Card className="bg-slate-800 border-blue-500">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-gray-400">目标时间</CardTitle>

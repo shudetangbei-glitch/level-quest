@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GameEngine } from "@/game/engine";
 import { GameConfig } from "@/game/types";
 import { LEVEL_DEFINITIONS } from "@/game/levels";
+import { MobileControls } from "./MobileControls";
 
 interface GameCanvasProps {
   levelNumber: number;
@@ -38,16 +39,27 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
+    
+    // Responsive canvas sizing
+    const updateCanvasSize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (rect) {
+        const width = Math.min(rect.width - 32, 800);
+        const height = (width / 4) * 3; // 4:3 aspect ratio
+        canvas.width = width;
+        canvas.height = height;
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+
     const config: GameConfig = {
-      canvasWidth: 800,
-      canvasHeight: 600,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
       gravity: 0.6,
       friction: 0.95,
     };
-
-    // Set canvas size
-    canvas.width = config.canvasWidth;
-    canvas.height = config.canvasHeight;
 
     // Create engine
     const engine = new GameEngine(canvas, config);
@@ -102,6 +114,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
 
     // Cleanup
     return () => {
+      window.removeEventListener("resize", updateCanvasSize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
         animationIdRef.current = null;
@@ -143,14 +156,38 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
     }
   };
 
+  const handleMobileMove = (direction: "left" | "right" | "idle") => {
+    if (!engineRef.current) return;
+    if (direction === "left") {
+      engineRef.current.keys["ArrowLeft"] = true;
+      engineRef.current.keys["ArrowRight"] = false;
+    } else if (direction === "right") {
+      engineRef.current.keys["ArrowRight"] = true;
+      engineRef.current.keys["ArrowLeft"] = false;
+    } else {
+      engineRef.current.keys["ArrowLeft"] = false;
+      engineRef.current.keys["ArrowRight"] = false;
+    }
+  };
+
+  const handleMobileJump = () => {
+    if (!engineRef.current) return;
+    engineRef.current.keys[" "] = true;
+    setTimeout(() => {
+      if (engineRef.current) {
+        engineRef.current.keys[" "] = false;
+      }
+    }, 100);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4 w-full pb-32 md:pb-4">
       <canvas
         ref={canvasRef}
-        className="border-4 border-gray-800 rounded-lg shadow-lg bg-gray-100"
+        className="border-4 border-gray-800 rounded-lg shadow-lg bg-gray-100 w-full max-w-2xl"
         style={{ maxWidth: "100%", height: "auto" }}
       />
-      <div className="flex gap-4">
+      <div className="hidden md:flex gap-4">
         <button
           onClick={handlePause}
           disabled={!gameState.isRunning || gameState.isCompleted || gameState.isFailed}
@@ -165,6 +202,11 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
           重新开始
         </button>
       </div>
+      <MobileControls
+        onMove={handleMobileMove}
+        onJump={handleMobileJump}
+        onPause={handlePause}
+      />
     </div>
   );
 };
