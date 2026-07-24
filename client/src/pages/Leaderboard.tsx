@@ -54,11 +54,11 @@ export default function Leaderboard() {
             onClick={() => navigate("/")}
             className="mb-6 bg-gray-700 hover:bg-gray-600"
           >
-            ← Back to Home
+            ← 返回主菜单
           </Button>
-          <h1 className="text-5xl font-bold text-white mb-2">🏆 Leaderboards</h1>
+          <h1 className="text-5xl font-bold text-white mb-2">🏆 排行榜</h1>
           <p className="text-xl text-purple-200">
-            Compete with players worldwide and claim your spot at the top
+            与全球玩家竞争，争夺榜单顶端
           </p>
         </div>
 
@@ -69,13 +69,13 @@ export default function Leaderboard() {
               value="level"
               className="text-white data-[state=active]:bg-purple-600"
             >
-              Level Rankings
+              关卡排行
             </TabsTrigger>
             <TabsTrigger
               value="global"
               className="text-white data-[state=active]:bg-purple-600"
             >
-              Global Rankings
+              全球排行
             </TabsTrigger>
           </TabsList>
 
@@ -83,7 +83,7 @@ export default function Leaderboard() {
           <TabsContent value="level" className="space-y-6">
             {/* Level Selector */}
             <div className="bg-slate-800 border-2 border-purple-500 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Select a Level</h2>
+              <h2 className="text-xl font-bold text-white mb-4">选择关卡</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
                 {Object.entries(LEVEL_DEFINITIONS).map(([levelNum]) => {
                   const levelNumber = parseInt(levelNum);
@@ -98,7 +98,7 @@ export default function Leaderboard() {
                           : "bg-slate-700 hover:bg-slate-600"
                       } text-white font-bold`}
                     >
-                      Level {levelNumber}
+                      第 {levelNumber} 关
                     </Button>
                   );
                 })}
@@ -109,15 +109,15 @@ export default function Leaderboard() {
             <Card className="bg-slate-800 border-2 border-purple-500">
               <CardHeader>
                 <CardTitle className="text-white">
-                  {LEVEL_DEFINITIONS[selectedLevel]?.name} - Top 10
+                  {LEVEL_DEFINITIONS[selectedLevel]?.name} - 前 10 名
                 </CardTitle>
                 <CardDescription className="text-purple-300">
-                  Fastest completion times
+                  最快完成时间排行
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {levelLoading ? (
-                  <div className="text-center text-gray-400 py-8">Loading...</div>
+                  <div className="text-center text-gray-400 py-8">加载中...</div>
                 ) : levelLeaderboard && levelLeaderboard.length > 0 ? (
                   <div className="space-y-2">
                     {levelLeaderboard.map((entry, index) => (
@@ -131,7 +131,7 @@ export default function Leaderboard() {
                           </span>
                           <div>
                             <p className="text-white font-semibold">{entry.userName}</p>
-                            <p className="text-gray-400 text-sm">Level {selectedLevel}</p>
+                            <p className="text-gray-400 text-sm">第 {selectedLevel} 关</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -144,7 +144,7 @@ export default function Leaderboard() {
                   </div>
                 ) : (
                   <div className="text-center text-gray-400 py-8">
-                    No scores yet. Be the first to complete this level!
+                    暂无数据。成为第一个完成此关卡的玩家吧！
                   </div>
                 )}
               </CardContent>
@@ -155,14 +155,14 @@ export default function Leaderboard() {
           <TabsContent value="global" className="space-y-6">
             <Card className="bg-slate-800 border-2 border-purple-500">
               <CardHeader>
-                <CardTitle className="text-white">Global Rankings - Top 10</CardTitle>
+                <CardTitle className="text-white">全球排行 - 前 10 名</CardTitle>
                 <CardDescription className="text-purple-300">
-                  Based on total stars and completed levels
+                  基于总星级和完成关卡数
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {globalLoading ? (
-                  <div className="text-center text-gray-400 py-8">Loading...</div>
+                  <div className="text-center text-gray-400 py-8">加载中...</div>
                 ) : globalLeaderboard && globalLeaderboard.length > 0 ? (
                   <div className="space-y-2">
                     {globalLeaderboard.map((entry, index) => (
@@ -175,9 +175,9 @@ export default function Leaderboard() {
                             {getMedalEmoji(index + 1)}
                           </span>
                           <div>
-                            <p className="text-white font-semibold">Player {entry.userId}</p>
+                            <p className="text-white font-semibold">玩家 {entry.userId}</p>
                             <p className="text-gray-400 text-sm">
-                              {entry.completedLevels} levels completed
+                              已完成 {entry.completedLevels} 个关卡
                             </p>
                           </div>
                         </div>
@@ -185,14 +185,14 @@ export default function Leaderboard() {
                           <p className="text-2xl font-bold text-yellow-400">
                             {"⭐".repeat(Math.min(entry.totalStars, 18))}
                           </p>
-                          <p className="text-gray-400 text-sm">{entry.totalStars} stars</p>
+                          <p className="text-gray-400 text-sm">{entry.totalStars} 颗星</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="text-center text-gray-400 py-8">
-                    No players yet. Complete levels to appear on the leaderboard!
+                    暂无玩家。完成关卡即可登上排行榜！
                   </div>
                 )}
               </CardContent>
@@ -203,20 +203,17 @@ export default function Leaderboard() {
         {/* Info Card */}
         <Card className="bg-slate-800 border-2 border-purple-500 mt-8">
           <CardHeader>
-            <CardTitle className="text-white">📊 How Rankings Work</CardTitle>
+            <CardTitle className="text-white">📊 排行榜说明</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-gray-300">
             <p>
-              <span className="font-semibold text-purple-300">Level Rankings:</span> Shows the
-              fastest players on each individual level.
+              <span className="font-semibold text-purple-300">关卡排行：</span> 显示各个关卡上最快的玩家。
             </p>
             <p>
-              <span className="font-semibold text-purple-300">Global Rankings:</span> Ranks players
-              by total stars earned and levels completed.
+              <span className="font-semibold text-purple-300">全球排行：</span> 根据获得的总星级和完成的关卡数排名玩家。
             </p>
             <p>
-              <span className="font-semibold text-purple-300">Star System:</span> Earn 3 stars for
-              completing within 70% of target time, 2 stars for 100%, 1 star for 150%.
+              <span className="font-semibold text-purple-300">星级系统：</span> 在目标时间的 70% 内完成获得 3 颗星，100% 内获得 2 颗星，150% 内获得 1 颗星。
             </p>
           </CardContent>
         </Card>

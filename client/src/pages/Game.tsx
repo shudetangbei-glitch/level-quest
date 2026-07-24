@@ -35,10 +35,10 @@ export default function Game() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <Card className="bg-slate-800 border-red-500">
           <CardHeader>
-            <CardTitle className="text-red-400">Level Not Found</CardTitle>
+            <CardTitle className="text-red-400">关卡未找到</CardTitle>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate("/levels")}>Back to Levels</Button>
+            <Button onClick={() => navigate("/levels")}>返回关卡选择</Button>
           </CardContent>
         </Card>
       </div>
@@ -103,17 +103,21 @@ export default function Game() {
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-bold text-white">
-              Level {levelNumber}: {levelDef.name}
+              第 {levelNumber} 关：{levelDef.name}
             </h1>
             <p className="text-purple-300 mt-2">
-              Difficulty: <span className="font-semibold">{levelDef.difficulty.toUpperCase()}</span>
+              难度：<span className="font-semibold">
+                {levelDef.difficulty === "easy" ? "简单" :
+                 levelDef.difficulty === "medium" ? "中等" :
+                 levelDef.difficulty === "hard" ? "困难" : "极难"}
+              </span>
             </p>
           </div>
           <Button
             onClick={() => navigate("/levels")}
             className="bg-gray-700 hover:bg-gray-600"
           >
-            ← Back
+            ← 返回
           </Button>
         </div>
 
@@ -130,7 +134,7 @@ export default function Game() {
         <div className="grid grid-cols-3 gap-4 mb-8">
           <Card className="bg-slate-800 border-blue-500">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-400">Target Time</CardTitle>
+              <CardTitle className="text-sm text-gray-400">目标时间</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-blue-400">
@@ -140,23 +144,23 @@ export default function Game() {
           </Card>
           <Card className="bg-slate-800 border-green-500">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-400">Status</CardTitle>
+              <CardTitle className="text-sm text-gray-400">状态</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-green-400">
                 {gameState.isCompleted
-                  ? "✅ Completed"
+                  ? "✅ 已完成"
                   : gameState.isFailed
-                    ? "❌ Failed"
+                    ? "❌ 失败"
                     : gameState.isRunning
-                      ? "🎮 Playing"
-                      : "⏸️ Ready"}
+                      ? "🎮 进行中"
+                      : "⏸️ 准备就绪"}
               </p>
             </CardContent>
           </Card>
           <Card className="bg-slate-800 border-yellow-500">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-gray-400">Best Time</CardTitle>
+              <CardTitle className="text-sm text-gray-400">最佳时间</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-yellow-400">—</p>
@@ -167,14 +171,14 @@ export default function Game() {
         {/* Tips */}
         <Card className="bg-slate-800 border-purple-500">
           <CardHeader>
-            <CardTitle className="text-white">💡 Tips</CardTitle>
+            <CardTitle className="text-white">💡 游戏提示</CardTitle>
           </CardHeader>
           <CardContent className="text-gray-300 space-y-2">
-            <p>• Use Arrow Keys or WASD to move left and right</p>
-            <p>• Press Space or Up Arrow to jump</p>
-            <p>• Avoid red obstacles - they will damage you</p>
-            <p>• Reach the green goal to complete the level</p>
-            <p>• Complete faster to earn more stars!</p>
+            <p>• 使用方向键或 WASD 键左右移动</p>
+            <p>• 按空格键或上方向键跳跃</p>
+            <p>• 避免红色障碍物 - 会造成伤害</p>
+            <p>• 到达绿色目标即可完成关卡</p>
+            <p>• 完成速度越快获得的星级越多！</p>
           </CardContent>
         </Card>
       </div>
@@ -184,12 +188,12 @@ export default function Game() {
         <DialogContent className="bg-slate-800 border-2 border-purple-500">
           <DialogHeader>
             <DialogTitle className="text-2xl text-white">
-              {gameState.isCompleted ? "🎉 Level Completed!" : "💔 Level Failed"}
+              {gameState.isCompleted ? "🎉 关卡完成！" : "💔 关卡失败"}
             </DialogTitle>
             <DialogDescription className="text-purple-300">
               {gameState.isCompleted
-                ? "Great job! Check your stats below."
-                : "Don't give up! Try again."}
+                ? "干得好！查看下面的成绩。"
+                : "别放弃！再试一次。"}
             </DialogDescription>
           </DialogHeader>
 
@@ -199,28 +203,34 @@ export default function Game() {
                 <>
                   <div className="bg-slate-700 p-4 rounded-lg space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Time:</span>
+                      <span className="text-gray-300">耗时：</span>
                       <span className="text-2xl font-bold text-blue-400">
                         {formatTime(completionData.time)}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Stars:</span>
+                      <span className="text-gray-300">星级：</span>
                       <span className="text-2xl font-bold text-yellow-400">
                         {"⭐".repeat(getStarRating(completionData.time))}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Score:</span>
+                      <span className="text-gray-300">分数：</span>
                       <span className="text-2xl font-bold text-green-400">
                         {completionData.score}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-3 border-t border-slate-600">
+                      <span className="text-gray-300">保存状态：</span>
+                      <span className="text-lg font-bold text-green-400">
+                        {isAuthenticated ? "✓ 已保存" : "⚠ 未保存"}
                       </span>
                     </div>
                   </div>
 
                   {!isAuthenticated && (
                     <div className="bg-orange-900 border border-orange-500 p-3 rounded text-orange-200 text-sm">
-                      Sign in to save your progress and compete on leaderboards!
+                      登录后可保存进度并参与全球排行榜竞争！
                     </div>
                   )}
                 </>
@@ -232,21 +242,21 @@ export default function Game() {
                     onClick={() => window.location.reload()}
                     className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold"
                   >
-                    🔄 Retry
+                    🔄 重试
                   </Button>
                 )}
                 <Button
                   onClick={() => navigate("/levels")}
                   className="flex-1 bg-gray-600 hover:bg-gray-700"
                 >
-                  Back to Levels
+                  返回关卡选择
                 </Button>
                 {gameState.isCompleted && levelNumber < 6 && (
                   <Button
                     onClick={() => navigate(`/game/${levelNumber + 1}`)}
                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                   >
-                    Next Level →
+                    下一关 →
                   </Button>
                 )}
               </div>

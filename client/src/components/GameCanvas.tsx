@@ -156,13 +156,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
           disabled={!gameState.isRunning || gameState.isCompleted || gameState.isFailed}
           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
         >
-          {gameState.isPaused ? "Resume" : "Pause"}
+          {gameState.isPaused ? "继续" : "暂停"}
         </button>
         <button
           onClick={handleRestart}
           className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
         >
-          Restart
+          重新开始
         </button>
       </div>
     </div>

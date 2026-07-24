@@ -87,6 +87,21 @@ export default function LevelSelect() {
     }
   };
 
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case "easy":
+        return "简单";
+      case "medium":
+        return "中等";
+      case "hard":
+        return "困难";
+      case "extreme":
+        return "极难";
+      default:
+        return difficulty;
+    }
+  };
+
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -110,11 +125,11 @@ export default function LevelSelect() {
             onClick={() => navigate("/")}
             className="mb-6 bg-gray-700 hover:bg-gray-600"
           >
-            ← Back to Home
+            ← 返回主菜单
           </Button>
-          <h1 className="text-5xl font-bold text-white mb-2">Select a Level</h1>
+          <h1 className="text-5xl font-bold text-white mb-2">选择关卡</h1>
           <p className="text-xl text-purple-200">
-            {isAuthenticated ? `Welcome, ${user?.name}!` : "Sign in to save your progress"}
+            {isAuthenticated ? `欢迎，${user?.name}！` : "登录后可保存进度"}
           </p>
         </div>
 
@@ -142,14 +157,14 @@ export default function LevelSelect() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-2xl text-white">
-                        Level {levelNumber}
+                        第 {levelNumber} 关
                       </CardTitle>
                       <CardDescription className="text-purple-300">
                         {levelDef.name}
                       </CardDescription>
                     </div>
                     <Badge className={`${getDifficultyColor(levelDef.difficulty)} text-white`}>
-                      {levelDef.difficulty.toUpperCase()}
+                      {getDifficultyLabel(levelDef.difficulty)}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -160,17 +175,17 @@ export default function LevelSelect() {
                     {isLocked ? (
                       <>
                         <span className="text-2xl">🔒</span>
-                        <span className="text-gray-400">Locked</span>
+                        <span className="text-gray-400">已锁定</span>
                       </>
                     ) : status === "completed" ? (
                       <>
                         <span className="text-2xl">✅</span>
-                        <span className="text-green-400">Completed</span>
+                        <span className="text-green-400">已完成</span>
                       </>
                     ) : (
                       <>
                         <span className="text-2xl">🎮</span>
-                        <span className="text-blue-400">Ready to Play</span>
+                        <span className="text-blue-400">准备就绪</span>
                       </>
                     )}
                   </div>
@@ -179,13 +194,13 @@ export default function LevelSelect() {
                   {progress && !isLocked && (
                     <div className="space-y-2 pt-2 border-t border-slate-700">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Best Time:</span>
+                        <span className="text-gray-400">最佳时间：</span>
                         <span className="text-white font-semibold">
                           {progress.bestTime ? formatTime(progress.bestTime) : "—"}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Stars:</span>
+                        <span className="text-gray-400">星级：</span>
                         <span className="text-yellow-400 font-semibold">
                           {"⭐".repeat(progress.stars)}
                           {progress.stars === 0 && "—"}
@@ -196,7 +211,7 @@ export default function LevelSelect() {
 
                   {/* Target Time */}
                   <div className="text-sm text-gray-400 pt-2 border-t border-slate-700">
-                    Target Time: {formatTime(levelDef.targetTime)}
+                    目标时间：{formatTime(levelDef.targetTime)}
                   </div>
 
                   {/* Play Button */}
@@ -208,7 +223,7 @@ export default function LevelSelect() {
                     } text-white font-bold`}
                     disabled={isLocked}
                   >
-                    {isLocked ? "🔒 Locked" : status === "completed" ? "🔄 Replay" : "▶️ Play"}
+                    {isLocked ? "🔒 已锁定" : status === "completed" ? "🔄 重新挑战" : "▶️ 开始"}
                   </Button>
                 </CardContent>
               </Card>
@@ -218,22 +233,22 @@ export default function LevelSelect() {
 
         {/* Info Section */}
         <div className="mt-12 bg-slate-800 border-2 border-purple-500 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">📋 How to Play</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">📋 游戏说明</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
             <div>
-              <p className="font-semibold text-purple-300 mb-2">Controls:</p>
+              <p className="font-semibold text-purple-300 mb-2">控制方式：</p>
               <ul className="space-y-1 text-sm">
-                <li>• Arrow Keys or WASD to move</li>
-                <li>• Space or Up Arrow to jump</li>
-                <li>• P to pause/resume</li>
+                <li>• 方向键或 WASD 移动</li>
+                <li>• 空格或上方向键跳跃</li>
+                <li>• P 键暂停/继续</li>
               </ul>
             </div>
             <div>
-              <p className="font-semibold text-purple-300 mb-2">Star Ratings:</p>
+              <p className="font-semibold text-purple-300 mb-2">星级评分：</p>
               <ul className="space-y-1 text-sm">
-                <li>• ⭐⭐⭐ Complete within 70% of target time</li>
-                <li>• ⭐⭐ Complete within 100% of target time</li>
-                <li>• ⭐ Complete within 150% of target time</li>
+                <li>• ⭐⭐⭐ 在目标时间的 70% 内完成</li>
+                <li>• ⭐⭐ 在目标时间内完成</li>
+                <li>• ⭐ 在目标时间的 150% 内完成</li>
               </ul>
             </div>
           </div>
