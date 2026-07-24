@@ -8,6 +8,7 @@ import GameHome from "./pages/GameHome";
 import LevelSelect from "./pages/LevelSelect";
 import Game from "./pages/Game";
 import Leaderboard from "./pages/Leaderboard";
+import Profile from "./pages/Profile";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/levels"} component={LevelSelect} />
       <Route path={"/game/:levelNumber"} component={Game} />
       <Route path={"/leaderboard"} component={Leaderboard} />
+      <Route path={"/profile"} component={Profile} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

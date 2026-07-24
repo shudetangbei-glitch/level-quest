@@ -13,6 +13,7 @@ import {
   getLeaderboard,
   getGlobalLeaderboard,
 } from "./db";
+import { updateLeaderboard } from "./leaderboard";
 
 export const appRouter = router({
   system: systemRouter,
@@ -74,6 +75,14 @@ export const appRouter = router({
             totalScore: newStars * 100,
             completedLevels: newCompleted,
           });
+
+          // Update leaderboard
+          await updateLeaderboard(
+            ctx.user.id,
+            input.levelId,
+            input.completionTime,
+            ctx.user.name || `Player ${ctx.user.id}`
+          );
         }
 
         return { success: true, isBetterTime };
@@ -98,6 +107,11 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return getGlobalLeaderboard(input.limit || 10);
       }),
+
+    // Get user statistics
+    getUserStats: protectedProcedure.query(async ({ ctx }) => {
+      return getUserStats(ctx.user.id);
+    }),
 
     // Unlock next level
     unlockNextLevel: protectedProcedure

@@ -100,6 +100,15 @@ export default function GameHome() {
                 🏆 Leaderboard
               </Button>
             </div>
+
+            {isAuthenticated && (
+              <Button
+                onClick={() => navigate("/profile")}
+                className="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg"
+              >
+                👤 My Profile
+              </Button>
+            )}
           </CardContent>
         </Card>
 
